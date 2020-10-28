@@ -15,6 +15,7 @@ using namespace std;
 void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *packet);
 
 int main(int argc, char **argv) {
+
     /* Local variable declaration for interface */
     string interface,port_range;
     pcap_t *handle ;
@@ -47,16 +48,15 @@ int main(int argc, char **argv) {
     char errbuf[PCAP_ERRBUF_SIZE]; // Size defined in pcap.h
     string type = interface.substr(interface.find('.',0),interface.length());
 
-    if(!strcmp(type.data(),".pcap") || !strcmp(type.data(),".cap")){
-        if((handle = pcap_open_offline(interface.data(),errbuf)) == NULL){
-            cerr << "Chyba, pcap offline open" << endl;
-            exit(1);
-        }
+
+    if((handle = pcap_open_offline(interface.data(),errbuf)) == NULL){
+        cout << "Chyba, pcap offline open" << endl;
+        exit(1);
     }
 
-    //Before appling filter, it must be compiled
+    // Before appling filter, it must be compiled
     if(pcap_compile(handle, &fp, filter_exp.data(), 0, net_address) < 0){
-        cerr << "Error, pcap compile" << endl;
+        cerr << "Chyba,pcap compile" << endl;
         exit(1);
     }
 
